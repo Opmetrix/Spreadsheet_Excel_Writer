@@ -428,16 +428,16 @@ class Spreadsheet_Excel_Writer_Format extends PEAR
         }
         $reserved   = 0x00;                // Reserved
         $grbit      = 0x00;                // Font attributes
-        if ($this->_italic !== 0) {
+        if ($this->_italic) {
             $grbit     |= 0x02;
         }
-        if ($this->_font_strikeout !== 0) {
+        if ($this->_font_strikeout) {
             $grbit     |= 0x08;
         }
-        if ($this->_font_outline !== 0) {
+        if ($this->_font_outline) {
             $grbit     |= 0x10;
         }
-        if ($this->_font_shadow !== 0) {
+        if ($this->_font_shadow) {
             $grbit     |= 0x20;
         }
 

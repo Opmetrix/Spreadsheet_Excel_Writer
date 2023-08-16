@@ -600,10 +600,10 @@ class Spreadsheet_Excel_Writer_Parser extends PEAR
     protected function _convertNumber($num)
     {
         // Integer in the range 0..2**16-1
-        if (preg_match("/^\d+$/", $num) && $num <= 65535) {
+        if ((preg_match("/^\d+$/", $num)) and ($num <= 65535)) {
             return pack("Cv", $this->ptg['ptgInt'], $num);
         } else { // A float
-            if ($this->_byte_order !== 0) { // if it's Big Endian
+            if ($this->_byte_order) { // if it's Big Endian
                 $num = strrev($num);
             }
             return pack("Cd", $this->ptg['ptgNum'], $num);

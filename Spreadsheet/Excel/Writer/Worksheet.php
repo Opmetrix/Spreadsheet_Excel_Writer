@@ -592,7 +592,7 @@ class Spreadsheet_Excel_Writer_Worksheet extends Spreadsheet_Excel_Writer_BIFFwr
         // Append
         $this->_storeWindow2();
         $this->_storeZoom();
-        if ($this->_panes !== []) {
+        if (!empty($this->_panes)) {
             $this->_storePanes($this->_panes);
         }
         $this->_storeSelection($this->_selection);
@@ -627,7 +627,7 @@ class Spreadsheet_Excel_Writer_Worksheet extends Spreadsheet_Excel_Writer_BIFFwr
         $buffer = 4096;
 
         // Return data stored in memory
-        if ($this->_data !== null) {
+        if (isset($this->_data)) {
             $tmp   = $this->_data;
             unset($this->_data);
             if ($this->_using_tmpfile) {
@@ -777,7 +777,7 @@ class Spreadsheet_Excel_Writer_Worksheet extends Spreadsheet_Excel_Writer_BIFFwr
         $this->_colinfo = array_values($this->_colinfo);
         $this->_colinfo[] = array($firstcol, $lastcol, $width, $format, $hidden, $level);
         // Set width to zero if column is hidden
-        $width = ($hidden !== 0) ? 0 : $width;
+        $width = ($hidden) ? 0 : $width;
         for ($col = $firstcol; $col <= $lastcol; $col++)
         {
             $this->col_sizes[$col] = $width;
@@ -1392,8 +1392,9 @@ class Spreadsheet_Excel_Writer_Worksheet extends Spreadsheet_Excel_Writer_BIFFwr
         }
 
         $password ^= strlen($plaintext);
+        $password ^= 0xCE4B;
 
-        return($password ^ 0xCE4B);
+        return($password);
     }
 
     /**
@@ -1480,7 +1481,7 @@ class Spreadsheet_Excel_Writer_Worksheet extends Spreadsheet_Excel_Writer_BIFFwr
         $header    = pack("vv",  $record, $length);
         $data      = pack("vvv", $row, $col, $xf);
         $xl_double = pack("d",   $num);
-        if ($this->_byte_order !== 0) { // if it's Big Endian
+        if ($this->_byte_order) { // if it's Big Endian
             $xl_double = strrev($xl_double);
         }
 

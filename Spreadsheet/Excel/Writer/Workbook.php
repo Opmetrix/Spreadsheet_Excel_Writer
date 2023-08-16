@@ -220,7 +220,7 @@ class Spreadsheet_Excel_Writer_Workbook extends Spreadsheet_Excel_Writer_BIFFwri
     */
     public function close()
     {
-        if ($this->_fileclosed !== 0) { // Prevent close() from being called twice.
+        if ($this->_fileclosed) { // Prevent close() from being called twice.
             return true;
         }
         $res = $this->_storeWorkbook();
@@ -1407,12 +1407,16 @@ class Spreadsheet_Excel_Writer_Workbook extends Spreadsheet_Excel_Writer_BIFFwri
                 // If the string (or substr) is small enough we can write it in the
                 // new CONTINUE block. Else, go through the loop again to write it in
                 // one or more CONTINUE blocks
-                $written = $block_length < $continue_limit ? $block_length : 0;
+                if ($block_length < $continue_limit) {
+                    $written = $block_length;
+                } else {
+                    $written = 0;
+                }
             }
         }
 
         // Store the max size for the last block unless it is empty
-        if ($written + $continue !== 0) {
+        if ($written + $continue) {
             $this->_block_sizes[] = $written + $continue;
         }
 
@@ -1426,10 +1430,10 @@ class Spreadsheet_Excel_Writer_Workbook extends Spreadsheet_Excel_Writer_BIFFwri
         $tmp_block_sizes = $this->_block_sizes;
 
         $length  = 12;
-        if ($tmp_block_sizes !== []) {
+        if (!empty($tmp_block_sizes)) {
             $length += array_shift($tmp_block_sizes); // SST
         }
-        while ($tmp_block_sizes !== []) {
+        while (!empty($tmp_block_sizes)) {
             $length += 4 + array_shift($tmp_block_sizes); // CONTINUEs
         }
 
