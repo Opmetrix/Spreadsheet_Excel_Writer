@@ -33,7 +33,7 @@
 */
 
 if (!class_exists('PEAR')) {
-    require_once 'PEAR.php';
+    require_once __DIR__ . '/PEAR.php';
 }
 
 /**
@@ -65,32 +65,32 @@ class Spreadsheet_Excel_Writer_BIFFwriter extends PEAR
     * The byte order of this architecture. 0 => little endian, 1 => big endian
     * @var integer
     */
-    public $_byte_order;
+    public $_byte_order = '';
 
     /**
     * The string containing the data of the BIFF stream
     * @var string
     */
-    public $_data;
+    public $_data = '';
 
     /**
     * The size of the data in bytes. Should be the same as strlen($this->_data)
     * @var integer
     */
-    public $_datasize;
+    public $_datasize = 0;
 
     /**
     * The maximun length for a BIFF record. See _addContinue()
     * @var integer
     * @see _addContinue()
     */
-    public $_limit;
+    public $_limit = 2080;
 
     /**
     * The temporary dir for storing the OLE file
     * @var string
     */
-    public $_tmp_dir;
+    public $_tmp_dir = '';
 
     /**
     * The temporary file for storing the OLE file
@@ -105,11 +105,6 @@ class Spreadsheet_Excel_Writer_BIFFwriter extends PEAR
     */
     public function __construct()
     {
-        $this->_byte_order = '';
-        $this->_data       = '';
-        $this->_datasize   = 0;
-        $this->_limit      = 2080;
-        $this->_tmp_dir    = '';
         // Set the byte order
         $this->_setByteOrder();
     }
@@ -125,14 +120,13 @@ class Spreadsheet_Excel_Writer_BIFFwriter extends PEAR
         // Check if "pack" gives the required IEEE 64bit float
         $teststr = pack("d", 1.2345);
         $number  = pack("C8", 0x8D, 0x97, 0x6E, 0x12, 0x83, 0xC0, 0xF3, 0x3F);
-        if ($number == $teststr) {
+        if ($number === $teststr) {
             $byte_order = 0;    // Little Endian
-        } elseif ($number == strrev($teststr)){
+        } elseif ($number === strrev($teststr)){
             $byte_order = 1;    // Big Endian
         } else {
             // Give up. I'll fix this in a later version.
-            return $this->raiseError("Required floating point format ".
-                                     "not supported on this platform.");
+            return $this->raiseError('Required floating point format not supported on this platform.');
         }
         $this->_byte_order = $byte_order;
     }
@@ -245,9 +239,8 @@ class Spreadsheet_Excel_Writer_BIFFwriter extends PEAR
         // Retrieve the last chunk of data
         $header  = pack("vv", $record, strlen($data) - $i);
         $tmp    .= $header;
-        $tmp    .= substr($data, $i, strlen($data) - $i);
 
-        return $tmp;
+        return $tmp . substr($data, $i, strlen($data) - $i);
     }
 
     /**

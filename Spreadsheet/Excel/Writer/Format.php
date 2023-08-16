@@ -33,7 +33,7 @@
 */
 
 if (!class_exists('PEAR')) {
-    require_once 'PEAR.php';
+    require_once __DIR__ . '/PEAR.php';
 }
 
 /**
@@ -46,6 +46,9 @@ if (!class_exists('PEAR')) {
 
 class Spreadsheet_Excel_Writer_Format extends PEAR
 {
+    public $_BIFF_version;
+    public $_diag = 0;
+    public $_diag_color = 0x40;
     /**
     * The index given by the workbook when creating a new format.
     * @var integer
@@ -56,193 +59,193 @@ class Spreadsheet_Excel_Writer_Format extends PEAR
     * Index to the FONT record.
     * @var integer
     */
-    public $font_index;
+    public $font_index = 0;
 
     /**
     * The font name (ASCII).
     * @var string
     */
-    public $_font_name;
+    public $_font_name = 'Arial';
 
     /**
     * Height of font (1/20 of a point)
     * @var integer
     */
-    public $_size;
+    public $_size = 10;
 
     /**
     * Bold style
     * @var integer
     */
-    public $_bold;
+    public $_bold = 0x0190;
 
     /**
     * Bit specifiying if the font is italic.
     * @var integer
     */
-    public $_italic;
+    public $_italic = 0;
 
     /**
     * Index to the cell's color
     * @var integer
     */
-    public $_color;
+    public $_color = 0x7FFF;
 
     /**
     * The text underline property
     * @var integer
     */
-    public $_underline;
+    public $_underline = 0;
 
     /**
     * Bit specifiying if the font has strikeout.
     * @var integer
     */
-    public $_font_strikeout;
+    public $_font_strikeout = 0;
 
     /**
     * Bit specifiying if the font has outline.
     * @var integer
     */
-    public $_font_outline;
+    public $_font_outline = 0;
 
     /**
     * Bit specifiying if the font has shadow.
     * @var integer
     */
-    public $_font_shadow;
+    public $_font_shadow = 0;
 
     /**
     * 2 bytes specifiying the script type for the font.
     * @var integer
     */
-    public $_font_script;
+    public $_font_script = 0;
 
     /**
     * Byte specifiying the font family.
     * @var integer
     */
-    public $_font_family;
+    public $_font_family = 0;
 
     /**
     * Byte specifiying the font charset.
     * @var integer
     */
-    public $_font_charset;
+    public $_font_charset = 0;
 
     /**
     * An index (2 bytes) to a FORMAT record (number format).
     * @var integer
     */
-    public $_num_format;
+    public $_num_format = 0;
 
     /**
     * Bit specifying if formulas are hidden.
     * @var integer
     */
-    public $_hidden;
+    public $_hidden = 0;
 
     /**
     * Bit specifying if the cell is locked.
     * @var integer
     */
-    public $_locked;
+    public $_locked = 0;
 
     /**
     * The three bits specifying the text horizontal alignment.
     * @var integer
     */
-    public $_text_h_align;
+    public $_text_h_align = 0;
 
     /**
     * Bit specifying if the text is wrapped at the right border.
     * @var integer
     */
-    public $_text_wrap;
+    public $_text_wrap = 0;
 
     /**
     * The three bits specifying the text vertical alignment.
     * @var integer
     */
-    public $_text_v_align;
+    public $_text_v_align = 2;
 
     /**
     * 1 bit, apparently not used.
     * @var integer
     */
-    public $_text_justlast;
+    public $_text_justlast = 0;
 
     /**
     * The two bits specifying the text rotation.
     * @var integer
     */
-    public $_rotation;
+    public $_rotation = 0;
 
     /**
     * The cell's foreground color.
     * @var integer
     */
-    public $_fg_color;
+    public $_fg_color = 0x40;
 
     /**
     * The cell's background color.
     * @var integer
     */
-    public $_bg_color;
+    public $_bg_color = 0x41;
 
     /**
     * The cell's background fill pattern.
     * @var integer
     */
-    public $_pattern;
+    public $_pattern = 0;
 
     /**
     * Style of the bottom border of the cell
     * @var integer
     */
-    public $_bottom;
+    public $_bottom = 0;
 
     /**
     * Color of the bottom border of the cell.
     * @var integer
     */
-    public $_bottom_color;
+    public $_bottom_color = 0x40;
 
     /**
     * Style of the top border of the cell
     * @var integer
     */
-    public $_top;
+    public $_top = 0;
 
     /**
     * Color of the top border of the cell.
     * @var integer
     */
-    public $_top_color;
+    public $_top_color = 0x40;
 
     /**
     * Style of the left border of the cell
     * @var integer
     */
-    public $_left;
+    public $_left = 0;
 
     /**
     * Color of the left border of the cell.
     * @var integer
     */
-    public $_left_color;
+    public $_left_color = 0x40;
 
     /**
     * Style of the right border of the cell
     * @var integer
     */
-    public $_right;
+    public $_right = 0;
 
     /**
     * Color of the right border of the cell.
     * @var integer
     */
-    public $_right_color;
+    public $_right_color = 0x40;
 
     /**
     * Constructor
@@ -255,47 +258,6 @@ class Spreadsheet_Excel_Writer_Format extends PEAR
     {
         $this->_xf_index       = $index;
         $this->_BIFF_version   = $BIFF_version;
-        $this->font_index      = 0;
-        $this->_font_name      = 'Arial';
-        $this->_size           = 10;
-        $this->_bold           = 0x0190;
-        $this->_italic         = 0;
-        $this->_color          = 0x7FFF;
-        $this->_underline      = 0;
-        $this->_font_strikeout = 0;
-        $this->_font_outline   = 0;
-        $this->_font_shadow    = 0;
-        $this->_font_script    = 0;
-        $this->_font_family    = 0;
-        $this->_font_charset   = 0;
-
-        $this->_num_format     = 0;
-
-        $this->_hidden         = 0;
-        $this->_locked         = 0;
-
-        $this->_text_h_align   = 0;
-        $this->_text_wrap      = 0;
-        $this->_text_v_align   = 2;
-        $this->_text_justlast  = 0;
-        $this->_rotation       = 0;
-
-        $this->_fg_color       = 0x40;
-        $this->_bg_color       = 0x41;
-
-        $this->_pattern        = 0;
-
-        $this->_bottom         = 0;
-        $this->_top            = 0;
-        $this->_left           = 0;
-        $this->_right          = 0;
-        $this->_diag           = 0;
-
-        $this->_bottom_color   = 0x40;
-        $this->_top_color      = 0x40;
-        $this->_left_color     = 0x40;
-        $this->_right_color    = 0x40;
-        $this->_diag_color     = 0x40;
 
         // Set properties passed to Spreadsheet_Excel_Writer_Workbook::addFormat()
         foreach ($properties as $property => $value)
@@ -327,7 +289,7 @@ class Spreadsheet_Excel_Writer_Format extends PEAR
         // Flags to indicate if attributes have been set.
         $atr_num     = ($this->_num_format != 0)?1:0;
         $atr_fnt     = ($this->font_index != 0)?1:0;
-        $atr_alc     = ($this->_text_wrap)?1:0;
+        $atr_alc     = ($this->_text_wrap !== 0)?1:0;
         $atr_bdr     = ($this->_bottom   ||
                         $this->_top      ||
                         $this->_left     ||
@@ -466,16 +428,16 @@ class Spreadsheet_Excel_Writer_Format extends PEAR
         }
         $reserved   = 0x00;                // Reserved
         $grbit      = 0x00;                // Font attributes
-        if ($this->_italic) {
+        if ($this->_italic !== 0) {
             $grbit     |= 0x02;
         }
-        if ($this->_font_strikeout) {
+        if ($this->_font_strikeout !== 0) {
             $grbit     |= 0x08;
         }
-        if ($this->_font_outline) {
+        if ($this->_font_outline !== 0) {
             $grbit     |= 0x10;
         }
-        if ($this->_font_shadow) {
+        if ($this->_font_shadow !== 0) {
             $grbit     |= 0x20;
         }
 
@@ -509,8 +471,7 @@ class Spreadsheet_Excel_Writer_Format extends PEAR
         $key .= "$this->_font_strikeout$this->_bold$this->_font_outline";
         $key .= "$this->_font_family$this->_font_charset";
         $key .= "$this->_font_shadow$this->_color$this->_italic";
-        $key  = str_replace(' ', '_', $key);
-        return ($key);
+        return (str_replace(' ', '_', $key));
     }
 
     /**
@@ -1014,9 +975,7 @@ class Spreadsheet_Excel_Writer_Format extends PEAR
                 }
                 break;
             default :
-                return $this->raiseError("Invalid value for angle.".
-                                  " Possible values are: 0, 90, 270 and -1 ".
-                                  "for stacking top-to-bottom.");
+                return $this->raiseError('Invalid value for angle. Possible values are: 0, 90, 270 and -1 for stacking top-to-bottom.');
                 $this->_rotation = 0;
                 break;
         }

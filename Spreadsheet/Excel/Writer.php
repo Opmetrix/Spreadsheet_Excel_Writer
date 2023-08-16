@@ -32,7 +32,7 @@
 */
 
 if (!class_exists('Spreadsheet_Excel_Writer_Workbook')) {
-    require_once 'Spreadsheet/Excel/Writer/Workbook.php';
+    require_once __DIR__ . '/Spreadsheet/Excel/Writer/Workbook.php';
 }
 
 /**
