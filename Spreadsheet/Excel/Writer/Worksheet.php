@@ -44,7 +44,7 @@ if (!class_exists('Spreadsheet_Excel_Writer_BIFFwriter')) {
 * @category FileFormats
 * @package  Spreadsheet_Excel_Writer
 */
-
+#[\AllowDynamicProperties]
 class Spreadsheet_Excel_Writer_Worksheet extends Spreadsheet_Excel_Writer_BIFFwriter
 {
     public $activesheet;
